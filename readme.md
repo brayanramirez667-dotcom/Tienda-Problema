@@ -39,12 +39,12 @@ Determina:
 
 | Variable           | Tipo     | Descripción |
 |--------------------|----------|------------|
-| montoPedido        | decimal  | Valor total del pedido |
-| ciudadDestino      | string   | Ciudad de envío |
-| tipoCliente        | string   | Nuevo o recurrente |
-| cantidadItems      | int      | Número de productos |
-| categoriaDespacho  | string   | Tipo de envío |
-| costoEnvio         | decimal  | Valor final del envío |
+| MontoPedido        | decimal  | Valor total del pedido |
+| CiudadDestino      | string   | Ciudad de envío |
+| TipoCliente        | string   | Nuevo o recurrente |
+| CantidadItems      | int      | Número de productos |
+| CategoriaDespacho  | string   | Tipo de envío |
+| CostoEnvio         | decimal  | Valor final del envío |
 
 ---
 
