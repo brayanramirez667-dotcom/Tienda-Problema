@@ -1,8 +1,22 @@
+# =========================
+# .NET / C# / Visual Studio
+# =========================
+
 # Build results
 bin/
 obj/
 
-# Visual Studio Code
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+
+# VS Code
 .vscode/
 
 # Logs
@@ -11,3 +25,46 @@ obj/
 # OS files
 .DS_Store
 Thumbs.db
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+
+# Publish output
+publish/
+*.publishproj
+
+# Test results
+TestResults/
+
+# Coverage
+coverage/
+*.coverage
+*.coveragexml
+
+# Temporary files
+*.tmp
+*.temp
+
+# Resharper
+_ReSharper*/
+*.DotSettings.user
+
+# Dotnet CLI
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Local config files
+appsettings.Development.json
+
+# Backup & cache files
+*.bak
+*.cache
+*.pidb
+*.svclog
+
+# Generated files
+Generated_Code/
