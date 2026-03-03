@@ -1,5 +1,9 @@
   # Sistema de Clasificación de Pedidos
 
+## Integrantes del Desarrollo de la Tienda
+- Brayan Stic Ramirez Posada
+- Luis Miguel Cortes Sena
+
 ## 📌 Descripción
 Programa en C# que clasifica un pedido según:
 - Monto del pedido
