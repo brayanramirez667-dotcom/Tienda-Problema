@@ -62,7 +62,7 @@ namespace SistemaEnviosMejorado
         {
             decimal monto = PedirDecimal("Ingrese el monto del pedido:");
             Zona zona = PedirZona();
-            ClienteTipo cliente = PedirCliente();
+            ClienteTipo cliente = PedirCliente(); // modificado
             int items = PedirEntero("Cantidad de productos:");
 
             string tipoEnvio = DeterminarEnvio(monto, cliente, items);
@@ -151,20 +151,21 @@ namespace SistemaEnviosMejorado
             }
         }
 
+        // MODIFICADO: ahora usa 0 y 1
         static ClienteTipo PedirCliente()
         {
             while (true)
             {
-                Console.WriteLine("Cliente (nuevo / frecuente):");
-                string entrada = Console.ReadLine().Trim().ToLower();
+                Console.WriteLine("Seleccione tipo de cliente (0: Nuevo, 1: Frecuente):");
+                string entrada = Console.ReadLine().Trim();
 
-                if (entrada == "nuevo")
+                if (entrada == "0")
                     return ClienteTipo.Nuevo;
 
-                if (entrada == "frecuente" || entrada == "recurrente")
+                if (entrada == "1")
                     return ClienteTipo.Frecuente;
 
-                Console.WriteLine("Escriba 'nuevo' o 'frecuente'.");
+                Console.WriteLine("Ingrese 0 o 1.");
             }
         }
 
