@@ -1,127 +1,197 @@
 using System;
+using System.Collections.Generic;
 
-class Program
+namespace SistemaEnviosMejorado
 {
-    enum TipoCliente
+    enum ClienteTipo { Nuevo, Frecuente }
+    enum Zona { Interior, Exterior }
+
+    class Pedido
     {
-        Nuevo,
-        Recurrente
+        public string TipoEnvio { get; set; }
+        public decimal Precio { get; set; }
+        public DateTime Momento { get; set; }
     }
 
-    enum CategoriaDespacho
+    class ProgramaPrincipal
     {
-        EnvioGratis,
-        EnvioExpress,
-        EnvioEstandar
-    }
+        const decimal LIMITE_GRATIS = 150000;
+        const decimal LIMITE_EXPRESS = 300000;
 
-    static void Main()
-    {
-        Console.Title = "Sistema de Despachos - Tienda Online";
+        const decimal TARIFA_ESTANDAR = 10000;
+        const decimal TARIFA_EXPRESS = 20000;
+        const decimal EXTRA_EXTERIOR = 15000;
 
-        decimal montoPedido = LeerDecimal("Ingrese el monto del pedido:");
-        string ciudadDestino = LeerTexto("Ingrese la ciudad destino (interior/exterior):");
-        TipoCliente tipoCliente = LeerTipoCliente();
-        int cantidadItems = LeerEntero("Cantidad de items:");
-
-        CategoriaDespacho categoria = CalcularCategoria(montoPedido, tipoCliente, cantidadItems);
-        decimal costoEnvio = CalcularCosto(categoria, ciudadDestino);
-
-        MostrarResultado(categoria, costoEnvio);
-
-        Console.ReadKey();
-    }
-
-    static decimal LeerDecimal(string mensaje)
-    {
-        decimal valor;
-        while (true)
+        static void Main()
         {
-            Console.WriteLine(mensaje);
-            if (decimal.TryParse(Console.ReadLine(), out valor) && valor >= 0)
-                return valor;
+            List<Pedido> registros = new List<Pedido>();
+            string opcionMenu;
 
-            Console.WriteLine("⚠️ Ingrese un monto válido.");
+            do
+            {
+                Console.WriteLine("\n=== MENÚ PRINCIPAL ===");
+                Console.WriteLine("1. Nuevo envío");
+                Console.WriteLine("2. Ver registros");
+                Console.WriteLine("3. Salir");
+                Console.Write("Opción: ");
+                opcionMenu = Console.ReadLine().Trim();
+
+                switch (opcionMenu)
+                {
+                    case "1":
+                        RegistrarPedido(registros);
+                        break;
+
+                    case "2":
+                        VerRegistros(registros);
+                        break;
+
+                    case "3":
+                        Console.WriteLine("Programa finalizado.");
+                        break;
+
+                    default:
+                        Console.WriteLine("Opción incorrecta.");
+                        break;
+                }
+
+            } while (opcionMenu != "3");
         }
-    }
 
-    static int LeerEntero(string mensaje)
-    {
-        int valor;
-        while (true)
+        static void RegistrarPedido(List<Pedido> lista)
         {
-            Console.WriteLine(mensaje);
-            if (int.TryParse(Console.ReadLine(), out valor) && valor >= 0)
-                return valor;
+            decimal monto = PedirDecimal("Ingrese el monto del pedido:");
+            Zona zona = PedirZona();
+            ClienteTipo cliente = PedirCliente();
+            int items = PedirEntero("Cantidad de productos:");
 
-            Console.WriteLine("⚠️ Ingrese un número válido.");
+            string tipoEnvio = DeterminarEnvio(monto, cliente, items);
+            decimal costo = CalcularValor(tipoEnvio, zona);
+
+            lista.Add(new Pedido
+            {
+                TipoEnvio = tipoEnvio,
+                Precio = costo,
+                Momento = DateTime.Now
+            });
+
+            MostrarInfo(tipoEnvio, costo);
         }
-    }
 
-    static string LeerTexto(string mensaje)
-    {
-        Console.WriteLine(mensaje);
-        return Console.ReadLine().Trim().ToLower();
-    }
-
-    static TipoCliente LeerTipoCliente()
-    {
-        while (true)
+        static string DeterminarEnvio(decimal monto, ClienteTipo cliente, int items)
         {
-            Console.WriteLine("Tipo de cliente (nuevo / recurrente):");
-            string input = Console.ReadLine().Trim().ToLower();
+            if (monto >= LIMITE_GRATIS && cliente == ClienteTipo.Frecuente)
+                return "Gratis";
 
-            if (input == "nuevo")
-                return TipoCliente.Nuevo;
+            if (items >= 5 || monto >= LIMITE_EXPRESS)
+                return "Express";
 
-            if (input == "recurrente")
-                return TipoCliente.Recurrente;
-
-            Console.WriteLine("⚠️ Ingrese 'nuevo' o 'recurrente'.");
+            return "Estandar";
         }
-    }
 
-    static CategoriaDespacho CalcularCategoria(decimal monto, TipoCliente cliente, int items)
-    {
-        if (monto >= 150000 && cliente == TipoCliente.Recurrente)
-            return CategoriaDespacho.EnvioGratis;
-
-        if (items >= 5 || monto >= 300000)
-            return CategoriaDespacho.EnvioExpress;
-
-        return CategoriaDespacho.EnvioEstandar;
-    }
-
-    static decimal CalcularCosto(CategoriaDespacho categoria, string ciudad)
-    {
-        decimal costoBase = categoria switch
+        static decimal CalcularValor(string tipo, Zona zona)
         {
-            CategoriaDespacho.EnvioGratis => 0,
-            CategoriaDespacho.EnvioExpress => 20000,
-            _ => 10000
-        };
+            decimal valor = tipo switch
+            {
+                "Gratis" => 0,
+                "Express" => TARIFA_EXPRESS,
+                _ => TARIFA_ESTANDAR
+            };
 
-        if (ciudad == "exterior")
-            costoBase += 15000;
+            if (zona == Zona.Exterior)
+                valor += EXTRA_EXTERIOR;
 
-        return costoBase;
-    }
+            return valor;
+        }
 
-    static void MostrarResultado(CategoriaDespacho categoria, decimal costo)
-    {
-        Console.WriteLine("\n----- RESULTADO -----");
-        Console.WriteLine($"Categoría: {FormatearCategoria(categoria)}");
-        Console.WriteLine($"Costo de envío: ${costo:N0}");
-        Console.WriteLine("Gracias por su compra!");
-    }
-
-    static string FormatearCategoria(CategoriaDespacho categoria)
-    {
-        return categoria switch
+        static decimal PedirDecimal(string msg)
         {
-            CategoriaDespacho.EnvioGratis => "Envío Gratis",
-            CategoriaDespacho.EnvioExpress => "Envío Express",
-            _ => "Envío Estándar"
-        };
+            decimal num;
+            bool ok;
+
+            do
+            {
+                Console.WriteLine(msg);
+                ok = decimal.TryParse(Console.ReadLine().Trim(), out num) && num >= 0;
+                if (!ok) Console.WriteLine("Valor inválido.");
+            } while (!ok);
+
+            return num;
+        }
+
+        static int PedirEntero(string msg)
+        {
+            int num;
+            bool ok;
+
+            do
+            {
+                Console.WriteLine(msg);
+                ok = int.TryParse(Console.ReadLine().Trim(), out num) && num >= 0;
+                if (!ok) Console.WriteLine("Número inválido.");
+            } while (!ok);
+
+            return num;
+        }
+
+        static Zona PedirZona()
+        {
+            while (true)
+            {
+                Console.WriteLine("Seleccione el destino (0: Interior, 1: Exterior):");
+                string entrada = Console.ReadLine().Trim();
+
+                if (entrada == "0")
+                    return Zona.Interior;
+
+                if (entrada == "1")
+                    return Zona.Exterior;
+
+                Console.WriteLine("Ingrese 0 o 1.");
+            }
+        }
+
+        static ClienteTipo PedirCliente()
+        {
+            while (true)
+            {
+                Console.WriteLine("Cliente (nuevo / frecuente):");
+                string entrada = Console.ReadLine().Trim().ToLower();
+
+                if (entrada == "nuevo")
+                    return ClienteTipo.Nuevo;
+
+                if (entrada == "frecuente" || entrada == "recurrente")
+                    return ClienteTipo.Frecuente;
+
+                Console.WriteLine("Escriba 'nuevo' o 'frecuente'.");
+            }
+        }
+
+        static void MostrarInfo(string tipo, decimal costo)
+        {
+            Console.WriteLine("\n--- DETALLE ---");
+            Console.WriteLine($"Tipo de envío: {tipo}");
+            Console.WriteLine($"Total a pagar: ${costo:N0}");
+
+            if (costo == 0)
+                Console.WriteLine("Envio gratis aplicado.");
+        }
+
+        static void VerRegistros(List<Pedido> lista)
+        {
+            Console.WriteLine("\n--- REGISTROS ---");
+
+            if (lista.Count == 0)
+            {
+                Console.WriteLine("No hay pedidos aún.");
+                return;
+            }
+
+            foreach (var p in lista)
+            {
+                Console.WriteLine($"{p.Momento:HH:mm} - {p.TipoEnvio} - ${p.Precio:N0}");
+            }
+        }
     }
 }
