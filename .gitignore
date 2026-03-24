@@ -5,6 +5,8 @@
 # Build results
 bin/
 obj/
+out/
+artifacts/
 
 # Visual Studio
 .vs/
@@ -19,52 +21,87 @@ obj/
 # VS Code
 .vscode/
 
-# Logs
-*.log
+# =========================
+# Logs y temporales
+# =========================
 
-# OS files
+*.log
+*.tmp
+*.temp
+*.cache
+
+# =========================
+# Sistema operativo
+# =========================
+
 .DS_Store
 Thumbs.db
+desktop.ini
 
-# NuGet
+# =========================
+# NuGet / paquetes
+# =========================
+
+packages/
 *.nupkg
 *.snupkg
-packages/
 .nuget/
 
-# Publish output
+# =========================
+# Publicación
+# =========================
+
 publish/
 *.publishproj
 
-# Test results
-TestResults/
+# =========================
+# Testing
+# =========================
 
-# Coverage
+TestResults/
+*.trx
+
+# =========================
+# Cobertura de código
+# =========================
+
 coverage/
 *.coverage
 *.coveragexml
 
-# Temporary files
-*.tmp
-*.temp
+# =========================
+# Herramientas adicionales
+# =========================
 
-# Resharper
+# ReSharper
 _ReSharper*/
 *.DotSettings.user
 
-# Dotnet CLI
+# =========================
+# Archivos obsoletos o legacy
+# =========================
+
 project.lock.json
 project.fragment.lock.json
-artifacts/
 
-# Local config files
+# =========================
+# Configuración local
+# =========================
+
 appsettings.Development.json
 
-# Backup & cache files
+# =========================
+# Archivos de respaldo
+# =========================
+
 *.bak
-*.cache
+*.old
+*.orig
 *.pidb
 *.svclog
 
-# Generated files
+# =========================
+# Código generado
+# =========================
+
 Generated_Code/
