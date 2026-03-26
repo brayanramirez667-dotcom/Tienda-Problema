@@ -136,9 +136,14 @@ namespace SistemaEnviosMejorado
 
         static Zona PedirZona()
         {
+            Console.WriteLine("\n--- ZONAS DE ENVÍO ---");
+            Console.WriteLine("0: Interior (Dentro de la ciudad o área metropolitana)");
+            Console.WriteLine("1: Exterior (Otras ciudades, regiones o zonas rurales)");
+            Console.WriteLine("----------------------");
+
             while (true)
             {
-                Console.WriteLine("Seleccione el destino (0: Interior, 1: Exterior):");
+                Console.WriteLine("Seleccione el destino (ingrese 0 o 1):");
                 string entrada = Console.ReadLine().Trim();
 
                 if (entrada == "0")
@@ -147,7 +152,8 @@ namespace SistemaEnviosMejorado
                 if (entrada == "1")
                     return Zona.Exterior;
 
-                Console.WriteLine("Ingrese 0 o 1.");
+                // TU APORTE: Mensaje de error más amigable
+                Console.WriteLine("Valor inválido. Por favor, ingrese solamente 0 o 1.");
             }
         }
 
@@ -189,10 +195,18 @@ namespace SistemaEnviosMejorado
                 return;
             }
 
+            decimal totalRecaudado = 0; // Tu aporte empieza aquí
+
             foreach (var p in lista)
             {
                 Console.WriteLine($"{p.Momento:HH:mm} - {p.TipoEnvio} - ${p.Precio:N0}");
+                totalRecaudado += p.Precio; // Sumas el precio de cada pedido
             }
+
+            // Muestras el resumen final
+            Console.WriteLine("-------------------");
+            Console.WriteLine($"Total de pedidos: {lista.Count}");
+            Console.WriteLine($"Dinero total recaudado: ${totalRecaudado:N0}");
+        	}
         }
     }
-}
