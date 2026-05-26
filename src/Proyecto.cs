@@ -100,7 +100,8 @@ namespace SistemaEnviosMejorado
             {
                 TipoEnvio = tipoEnvio,
                 Precio = precio,
-                Momento = DateTime.Now
+                // Se cambia DateTime.Now por DateTime.UtcNow.AddHours(-5) para corregir la hora del servidor a hora Colombia
+                Momento = DateTime.UtcNow.AddHours(-5)
             };
         }
     }
@@ -420,7 +421,7 @@ namespace SistemaEnviosMejorado
         }
 
         /// <summary>
-        /// Procesa la opción seleccionada y decide que hace segun lo opcion.
+        /// Procesar la opción seleccionada y decide que hace segun lo opcion.
         /// </summary>
         static void ProcesarOpcion(
             string opcion,
